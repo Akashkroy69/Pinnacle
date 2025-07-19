@@ -7,10 +7,47 @@ import { BsFillGrid3X3GapFill } from "react-icons/bs";
 import { LuShoppingCart } from "react-icons/lu";
 import { BsThreeDotsVertical } from "react-icons/bs";
 
-const navbar = () => {
+const Navbar = () => {
   return (
-    <div>navbar</div>
-  )
-}
+    <nav className={styles.navbar}>
+      <div className={styles.left}>
+        <span className={styles.logo}>Pinnacle</span>
+        <div className={styles.searchBox}>
+          <IoSearchOutline className={styles.searchIcon} />
+          <input
+            type="text"
+            placeholder="Search your Pinnacle Library"
+            className={styles.searchInput}
+          />
+        </div>
+      </div>
+      
+      <div className={styles.right}>
+        <div className={styles.menuItem}>
+          <LuSettings2 className={styles.filterIcon} />
+          <span className={styles.menuText}>Filter</span>
+        </div>
 
-export default navbar
+        <div className={styles.menuItem}>
+          <TbArrowsSort className={styles.sortIcon} />
+          <span className={styles.menuText}>Sort by: Recent</span>
+        </div>
+
+        <div className={styles.menuItem}>
+          <BsFillGrid3X3GapFill className={styles.viewIcon} />
+          <span className={styles.menuText}>View</span>
+        </div>
+
+        <div className={styles.menuItem}>
+          <LuShoppingCart className={styles.cartIcon} />
+        </div>
+
+        <div className={styles.menuItem}>
+          <BsThreeDotsVertical className={styles.moreIcon} />
+        </div>
+      </div>
+    </nav>
+  );
+};
+
+export default Navbar;

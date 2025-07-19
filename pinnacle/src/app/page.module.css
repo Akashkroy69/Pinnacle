@@ -20,10 +20,12 @@
   gap: 20px;
 
 }
+
 .logo {
   height: 50px;
   object-fit: contain;
 }
+
 .t1 {
   color: white;
 }
