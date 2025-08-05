@@ -11,21 +11,103 @@ const page = () => {
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [allBooks, setAllBooks] = useState([]);
+  const getData = () => {
+    let temp = [
+      {
+        id: 1,
+        image: "https://picsum.photos/600/400",
+        title: "Atomic Habits",
+        author: "James Clear",
+      },
+      {
+        id: 2,
+        image: "https://picsum.photos/600/500",
+        title: "The Subtle Art of Not Giving a F*ck",
+        author: "Mark Manson",
+      },
+      {
+        id: 3,
+        image: "https://picsum.photos/600/600",
+        title: "The Power of Habit",
+        author: "Charles Duhigg",
+      },
+      {
+        id: 4,
+        image: "https://picsum.photos/600/300",
+        title: "Deep Work",
+        author: "Cal Newport",
+      },
+    ];
+    setAllBooks(temp);
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
+
   return (
     <div className={styles.main}>
       <Navbar />
       <div className={styles.row}>
         <div className={styles.left}>
-          <div className={styles.menuMain}></div>
-          <div className={styles.menuItems}>
-            <span>All Titles</span>
-            <span>Books</span>
-            <span>Comics</span>
-            <span>Samples</span>
+          <div className={styles.menuMain}>
+            <FaBookOpen className={styles.bookicon} />
+            <p>Library</p>
+            {show ? (
+              <FaChevronDown
+                onClick={() => setShow(!show)}
+                className={styles.toRight}
+              />
+            ) : (
+              <FaChevronRight
+                onClick={() => setShow(!show)}
+                className={styles.toRight}
+              />
+            )}
+          </div>
+          {show && (
+            <div className={styles.menuItems}>
+              <span>All Titles</span>
+              <span>Books</span>
+              <span>Comics</span>
+              <span>Samples</span>
+            </div>
+          )}
+          <div className={styles.menuMain}>
+            <MdBook className={styles.bookicon2} />
+            <p>Notes & Highlights</p>
           </div>
         </div>
 
         <div className={styles.right}>
+          <h1>Trending</h1>
+          <div className={styles.books}>
+            {allBooks.map((book: any) => (
+              <div
+                onClick={() => {
+                  router.push(`/book/${book.id}`);
+                }}
+                key={book.id}
+                className={styles.bookItem}
+              >
+                <img
+                  src={book.image}
+                  alt={book.title}
+                  className={styles.bookImage}
+                />
+                <div className={styles.bookDetails}>
+                  <h3 className={styles.bookTitle}>
+                    {book.title}
+                  </h3>
+                  <p className={styles.bookAuthor}>
+                    {book.author}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+
         </div>
       </div>
 
