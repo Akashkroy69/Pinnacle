@@ -1,55 +1,55 @@
 "use client";
+
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
-import React, { useEffect, useState } from 'react'
 import styles from "./pinnacleLibrary.module.css";
+
 import { FaBookOpen } from "react-icons/fa";
 import { FaChevronRight, FaChevronDown } from "react-icons/fa6";
 import { MdBook } from "react-icons/md";
-import { useRouter } from "next/navigation";
-const page = () => {
+
+const apiurl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+
+interface Book {
+  _id: string;
+  image: string;
+  title: string;
+  author: string;
+}
+
+const Page = () => {
   const router = useRouter();
   const [show, setShow] = useState(false);
+  const [allBooks, setAllBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [allBooks, setAllBooks] = useState([]);
-  const getData = () => {
-    let temp = [
-      {
-        id: 1,
-        image: "https://picsum.photos/600/400",
-        title: "Atomic Habits",
-        author: "James Clear",
-      },
-      {
-        id: 2,
-        image: "https://picsum.photos/600/500",
-        title: "The Subtle Art of Not Giving a F*ck",
-        author: "Mark Manson",
-      },
-      {
-        id: 3,
-        image: "https://picsum.photos/600/600",
-        title: "The Power of Habit",
-        author: "Charles Duhigg",
-      },
-      {
-        id: 4,
-        image: "https://picsum.photos/600/300",
-        title: "Deep Work",
-        author: "Cal Newport",
-      },
-    ];
-    setAllBooks(temp);
-  };
 
   useEffect(() => {
-    getData();
+    const fetchAllBooks = async () => {
+      try {
+        const response = await fetch(`${apiurl}/api/books/all`);
+        if (!response.ok) throw new Error("Failed to fetch books");
+        const data: Book[] = await response.json();
+        setAllBooks(data);
+      } catch (err: any) {
+        setError(err.message || "Unknown error occurred");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAllBooks();
   }, []);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>{error}</p>;
 
   return (
     <div className={styles.main}>
       <Navbar />
       <div className={styles.row}>
+        {/* Sidebar */}
         <div className={styles.left}>
           <div className={styles.menuMain}>
             <FaBookOpen className={styles.bookicon} />
@@ -66,6 +66,7 @@ const page = () => {
               />
             )}
           </div>
+
           {show && (
             <div className={styles.menuItems}>
               <span>All Titles</span>
@@ -74,22 +75,22 @@ const page = () => {
               <span>Samples</span>
             </div>
           )}
+
           <div className={styles.menuMain}>
             <MdBook className={styles.bookicon2} />
             <p>Notes & Highlights</p>
           </div>
         </div>
 
+        {/* Book Grid */}
         <div className={styles.right}>
           <h1>Trending</h1>
           <div className={styles.books}>
-            {allBooks.map((book: any) => (
+            {allBooks.map((book) => (
               <div
-                onClick={() => {
-                  router.push(`/book/${book.id}`);
-                }}
-                key={book.id}
+                key={book._id}
                 className={styles.bookItem}
+                onClick={() => router.push(`/book/${book._id}`)}
               >
                 <img
                   src={book.image}
@@ -97,23 +98,16 @@ const page = () => {
                   className={styles.bookImage}
                 />
                 <div className={styles.bookDetails}>
-                  <h3 className={styles.bookTitle}>
-                    {book.title}
-                  </h3>
-                  <p className={styles.bookAuthor}>
-                    {book.author}
-                  </p>
+                  <h3 className={styles.bookTitle}>{book.title}</h3>
+                  <p className={styles.bookAuthor}>{book.author}</p>
                 </div>
               </div>
             ))}
           </div>
-
         </div>
       </div>
-
-
     </div>
-  )
-}
+  );
+};
 
-export default page
+export default Page;
