@@ -8,6 +8,8 @@ import Navbar from "@/components/Navbar";
 import styles from "./Read.module.css";
 import { useParams } from 'next/navigation';
 
+
+
 const apiurl = process.env.NEXT_PUBLIC_API_URL;
 
 interface Book {
